@@ -10,7 +10,7 @@ import com.ahmettekin.parsechat.model.Room
 import com.ahmettekin.parsechat.view.adapter.ChatRoomsAdapter.RoomViewHolder
 import kotlinx.android.synthetic.main.row_chatrooms_layout.view.*
 
-class ChatRoomsAdapter(private val roomList:List<Room>, val mContext:Context) : RecyclerView.Adapter<RoomViewHolder>() {
+class ChatRoomsAdapter(private val roomList:List<Room>, private val mContext:Context) : RecyclerView.Adapter<RoomViewHolder>() {
 
     class RoomViewHolder(itemView: View):RecyclerView.ViewHolder(itemView)
 
@@ -21,7 +21,8 @@ class ChatRoomsAdapter(private val roomList:List<Room>, val mContext:Context) : 
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
         holder.itemView.tvRoomName.text = roomList[position].name
         holder.itemView.setOnClickListener {
-            //TODO: "create a new Activity and go to activity that you created. Then configure adding user to room operations.
+            //TODO: Create a new activity and go to activity that you created. Then configure adding user to room operations.
+            //TODO: If current user hasn't joined yet, they shouldn't see the messages.
         }
     }
 

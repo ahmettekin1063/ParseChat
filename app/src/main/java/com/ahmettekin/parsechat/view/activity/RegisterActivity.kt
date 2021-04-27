@@ -10,7 +10,6 @@ import com.parse.ParseUser
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -39,7 +38,6 @@ class RegisterActivity : AppCompatActivity() {
         user.username=email.substring(0,email.indexOf("@"))
         user.setPassword(password)
         user.email=email
-
         user.signUpInBackground {
             if (it != null) {
                 progressBarRegister.visibility= View.INVISIBLE

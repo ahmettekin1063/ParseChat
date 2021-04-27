@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.ahmettekin.parsechat.R
-import com.ahmettekin.parsechat.model.User
 import com.ahmettekin.parsechat.view.activity.ChatRoomsActivity
 import com.parse.ParseObject
 import com.parse.ParseUser
@@ -31,10 +30,6 @@ class AddRoomFragment(private val activity: ChatRoomsActivity) : DialogFragment(
     override fun onClick(view: View?) {
         when(view?.id){
             R.id.btnCreateRoom -> {
-
-                /*val roomUser = ParseObject("RoomUser")
-                roomUser.put("userId",ParseUser.getCurrentUser().objectId)*/
-
                 val room = ParseObject("Rooms")
                 room.put("name", etRoomName.text.toString())
                 room.put("users", ParseUser.getCurrentUser())
