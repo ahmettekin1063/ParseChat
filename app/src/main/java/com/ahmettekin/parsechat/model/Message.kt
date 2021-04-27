@@ -3,6 +3,7 @@ package com.ahmettekin.parsechat.model
 import com.parse.ParseClassName
 import com.parse.ParseObject
 
+/*
 @ParseClassName("Message")
 class Message : ParseObject() {
     var userId: String?
@@ -20,4 +21,6 @@ class Message : ParseObject() {
         const val USER_ID_KEY = "userId"
         const val BODY_KEY = "body"
     }
-}
+}*/
+
+class Message(val userId: String?, val body: String?)

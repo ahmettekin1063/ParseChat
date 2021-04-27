@@ -1,4 +1,4 @@
-package com.ahmettekin.parsechat.view
+package com.ahmettekin.parsechat.view.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +25,7 @@ class SignInActivity : AppCompatActivity() {
     private fun loginControl() {
         ParseUser.getCurrentUser()?.let {
             if(it.isAuthenticated){
-                startActivity(Intent(applicationContext, ChatActivity::class.java))
+                startActivity(Intent(applicationContext, ChatRoomsActivity::class.java))
                 finish()
             }
         }
@@ -44,7 +44,7 @@ class SignInActivity : AppCompatActivity() {
                     }else{
                         progressBarLogin.visibility = View.INVISIBLE
                         Toast.makeText(applicationContext,"Welcome " + user.username.toString(),Toast.LENGTH_LONG).show()
-                        startActivity(Intent(applicationContext, ChatActivity::class.java))
+                        startActivity(Intent(applicationContext, ChatRoomsActivity::class.java))
                         finish()
                     }
                 }

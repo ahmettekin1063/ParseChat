@@ -1,4 +1,4 @@
-package com.ahmettekin.parsechat
+package com.ahmettekin.parsechat.view.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,13 +7,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.ahmettekin.parsechat.ChatAdapter.MessageViewHolder
+import com.ahmettekin.parsechat.R
+import com.ahmettekin.parsechat.view.adapter.ChatAdapter.MessageViewHolder
 import com.ahmettekin.parsechat.model.Message
 import com.bumptech.glide.Glide
 import java.math.BigInteger
 import java.security.MessageDigest
 
-class ChatAdapter(private val mContext: Context, private val mUserId: String, private val mMessages: List<Message>) : RecyclerView.Adapter<MessageViewHolder>() {
+class ChatAdapter(private val mContext: Context, private val mUserId: String, private val mMessages: List<Message>)
+    : RecyclerView.Adapter<MessageViewHolder>() {
     override fun getItemCount(): Int {
         return mMessages.size
     }
@@ -29,14 +31,18 @@ class ChatAdapter(private val mContext: Context, private val mUserId: String, pr
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
-        return if (viewType == MESSAGE_INCOMING) {
-            val contactView = inflater.inflate(R.layout.message_incoming, parent, false)
-            IncomingMessageViewHolder(contactView)
-        } else if (viewType == MESSAGE_OUTGOING) {
-            val contactView = inflater.inflate(R.layout.message_outgoing, parent, false)
-            OutgoingMessageViewHolder(contactView)
-        } else {
-            throw IllegalArgumentException("Unknown view type")
+        return when (viewType) {
+            MESSAGE_INCOMING -> {
+                val contactView = inflater.inflate(R.layout.message_incoming, parent, false)
+                IncomingMessageViewHolder(contactView)
+            }
+            MESSAGE_OUTGOING -> {
+                val contactView = inflater.inflate(R.layout.message_outgoing, parent, false)
+                OutgoingMessageViewHolder(contactView)
+            }
+            else -> {
+                throw IllegalArgumentException("Unknown view type")
+            }
         }
     }
 

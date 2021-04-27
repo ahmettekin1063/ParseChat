@@ -1,4 +1,4 @@
-package com.ahmettekin.parsechat.view
+package com.ahmettekin.parsechat.view.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
