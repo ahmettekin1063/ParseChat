@@ -14,11 +14,12 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
         configureListener()
+        ParseUser.logOut()
     }
 
     override fun onResume() {
         super.onResume()
-        loginControl()
+        //loginControl()
     }
 
     private fun loginControl() {

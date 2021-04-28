@@ -44,7 +44,7 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext,it.localizedMessage,Toast.LENGTH_LONG).show()
             } else {
                 progressBarRegister.visibility= View.INVISIBLE
-                Toast.makeText(applicationContext,"Your Account Created\nPlease Verify your E-mail",Toast.LENGTH_LONG).show()
+                //Toast.makeText(applicationContext,"Your Account Created\nPlease Verify your E-mail",Toast.LENGTH_LONG).show()
                 val intent = Intent(applicationContext, SignInActivity::class.java)
                 startActivity(intent)
                 finish()

@@ -8,12 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.ahmettekin.parsechat.R
+import com.ahmettekin.parsechat.Refreshable
 import com.ahmettekin.parsechat.view.activity.ChatRoomsActivity
 import com.parse.ParseObject
 import com.parse.ParseUser
 import kotlinx.android.synthetic.main.fragment_add_room.*
 
-class AddRoomFragment(private val activity: ChatRoomsActivity) : DialogFragment(), View.OnClickListener {
+class AddRoomFragment(private val refreshable: Refreshable) : DialogFragment(), View.OnClickListener {
     lateinit var mContext: Context
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,13 +33,17 @@ class AddRoomFragment(private val activity: ChatRoomsActivity) : DialogFragment(
             R.id.btnCreateRoom -> {
                 val room = ParseObject("Rooms")
                 room.put("name", etRoomName.text.toString())
-                room.put("users", ParseUser.getCurrentUser())
+                room.put("messageIdList", ArrayList<String>())
+                room.put("adminUserId", ParseUser.getCurrentUser().objectId)
+                val userIdList= ArrayList<String>()
+                userIdList.add(ParseUser.getCurrentUser().objectId)
+                room.put("userIdList", userIdList)
                 room.saveInBackground {
                     if (it != null) {
                         println(it.localizedMessage)
                         Toast.makeText(mContext, it.localizedMessage, Toast.LENGTH_LONG).show()
                     } else {
-                        activity.setupRoomList()
+                        refreshable.refresh()
                         Toast.makeText(mContext, "Room Created!", Toast.LENGTH_LONG).show()
                     }
                 }
