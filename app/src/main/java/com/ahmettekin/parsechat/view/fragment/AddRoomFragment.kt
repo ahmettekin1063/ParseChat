@@ -8,13 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.ahmettekin.parsechat.R
-import com.ahmettekin.parsechat.Refreshable
-import com.ahmettekin.parsechat.view.activity.ChatRoomsActivity
 import com.parse.ParseObject
 import com.parse.ParseUser
 import kotlinx.android.synthetic.main.fragment_add_room.*
 
-class AddRoomFragment(private val refreshable: Refreshable) : DialogFragment(), View.OnClickListener {
+class AddRoomFragment() : DialogFragment(), View.OnClickListener {
     lateinit var mContext: Context
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -43,7 +41,6 @@ class AddRoomFragment(private val refreshable: Refreshable) : DialogFragment(), 
                         println(it.localizedMessage)
                         Toast.makeText(mContext, it.localizedMessage, Toast.LENGTH_LONG).show()
                     } else {
-                        refreshable.refresh()
                         Toast.makeText(mContext, "Room Created!", Toast.LENGTH_LONG).show()
                     }
                 }

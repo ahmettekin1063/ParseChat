@@ -3,6 +3,7 @@ package com.ahmettekin.parsechat.view.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,25 +15,17 @@ import com.ahmettekin.parsechat.model.Message
 import com.ahmettekin.parsechat.model.Room
 import com.ahmettekin.parsechat.view.adapter.ChatAdapter
 import com.parse.*
+import com.parse.ParseQuery
+import com.parse.livequery.ParseLiveQueryClient
+import com.parse.livequery.SubscriptionHandling
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class ChatActivity : AppCompatActivity() {
     lateinit var mMessages: ArrayList<Message>
     lateinit var mAdapter: ChatAdapter
-    var mFirstLoad: Boolean = true
-    val POLL_INTERVAL = TimeUnit.SECONDS.toMillis(1)
-    val myHandler = Handler()
     private lateinit var currentRoom: Room
-
-    private val mRefreshMessagesRunnable = object : Runnable {
-        override fun run() {
-            setupMessages()
-            myHandler.postDelayed(this, POLL_INTERVAL)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,14 +108,14 @@ class ChatActivity : AppCompatActivity() {
         query.orderByAscending("createdAt")
         query.findInBackground { messages, e ->
             if (e == null) {
-                controlMessagesInCurrentRoom(messages)
+                getMessagesInCurrentRoom(messages)
                } else {
                 Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun controlMessagesInCurrentRoom(messages: MutableList<ParseObject>) {
+    fun getMessagesInCurrentRoom(messages: MutableList<ParseObject>) {
         val query: ParseQuery<ParseObject> = ParseQuery.getQuery("Rooms")
         query.getInBackground(currentRoom.objectId) { room, e ->
             mMessages.clear()
@@ -132,18 +125,19 @@ class ChatActivity : AppCompatActivity() {
                     mMessages.add(message)
                 }
             }
-            mAdapter.notifyDataSetChanged()
-            if (mFirstLoad) {
+            runOnUiThread {
+                mAdapter.notifyDataSetChanged()
                 rvChat.scrollToPosition(mMessages.size - 1)
-                mFirstLoad = false
             }
+
         }
     }
 
     override fun onResume() {
         super.onResume()
         joinControl()
-        myHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL)
+        setupMessages()
+        changeChatLive()
     }
 
     private fun joinControl() {
@@ -167,9 +161,29 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
-    override fun onPause() {
-        myHandler.removeCallbacksAndMessages(null)
-        super.onPause()
+    private fun changeChatLive() {
+        val parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient()
+        val parseQuery: ParseQuery<ParseObject> = ParseQuery.getQuery("Message")
+        parseQuery.limit = 50
+        parseQuery.orderByAscending("createdAt")
+        val subscriptionHandling: SubscriptionHandling<ParseObject> = parseLiveQueryClient.subscribe(parseQuery)
+        subscriptionHandling.handleEvents(object : SubscriptionHandling.HandleEventsCallback<ParseObject> {
+            override fun onEvents(query: ParseQuery<ParseObject>?, event: SubscriptionHandling.Event?, `object`: ParseObject?) {
+                val handler = Handler(Looper.getMainLooper())
+                handler.post(object : Runnable{
+                    override fun run() {
+                        println("tetiklendi")
+                        query?.findInBackground { messages, e ->
+                            if (e == null) {
+                                getMessagesInCurrentRoom(messages)
+                            } else {
+                                Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                })
+            }
+        })
     }
 
 }
